@@ -29,31 +29,35 @@ Shader "Sprites/InstancedSprite"
 
         Pass
         {
-        CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex SpriteVert
             #pragma fragment SpriteFrag
             #pragma require 2darray
             #pragma multi_compile_instancing
 
-            #include "UnityCG.cginc"
+            #include "LitInput.hlsl"
+            #include "LitForwardPass.hlsl"
 
-            UNITY_DECLARE_TEX2DARRAY(_Textures);
+            Texture2DArray _Textures;
+            SamplerState sampler_Textures;
             UNITY_INSTANCING_BUFFER_START(Props)
             UNITY_DEFINE_INSTANCED_PROP(float, _TextureIndex)
             UNITY_DEFINE_INSTANCED_PROP(half4, _Pivot)
             UNITY_DEFINE_INSTANCED_PROP(half4, _NewUV)
             UNITY_INSTANCING_BUFFER_END(Props)
 
-            fixed4 _RendererColor;
-            fixed2 _Flip;
+            half4 _RendererColor;
+            half2 _Flip;
             float _EnableExternalAlpha;
 
-            fixed4 _Color;
+
+            half4 _Color;
 
             struct appdata_t
             {
                 float4 vertex   : POSITION;
                 float4 color    : COLOR;
+                float3 normal   : NORMAL;
                 float2 texcoord : TEXCOORD0;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
@@ -61,13 +65,13 @@ Shader "Sprites/InstancedSprite"
             struct v2f
             {
                 float4 vertex   : SV_POSITION;
-                fixed4 color    : COLOR;
+                float4 color    : COLOR;
                 float2 texcoord : TEXCOORD0;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 // UNITY_VERTEX_OUTPUT_STEREO
             };
 
-            inline float4 UnityFlipSprite(in float3 pos, in fixed2 flip)
+            inline float4 UnityFlipSprite(in float3 pos, in half2 flip)
             {
                 return float4(pos.xy * flip, pos.z, 1.0);
             }
@@ -88,7 +92,7 @@ Shader "Sprites/InstancedSprite"
                 m._31 = 0; m._32 = 0; m._33 = 1; m._34 = 0;
                 m._41 = 0; m._42 = 0; m._43 = 0; m._44 = 1;
 
-                OUT.vertex = UnityFlipSprite(IN.vertex, _Flip);
+                OUT.vertex = UnityFlipSprite(IN.vertex.xyz, _Flip);
 
                 // uv coordinate transform matrix
                 half3x3 uvm;
@@ -106,11 +110,23 @@ Shader "Sprites/InstancedSprite"
                 // transform quad's original mesh to sprite's mesh
                 OUT.vertex = mul(m, OUT.vertex);
 
-                OUT.vertex = UnityObjectToClipPos(OUT.vertex);
+                OUT.vertex = TransformWorldToHClip(TransformObjectToWorld(OUT.vertex.xyz));
                 // OUT.texcoord = IN.texcoord;
                 OUT.texcoord.x = uv.x;
                 OUT.texcoord.y = uv.y;
-                // OUT.color = IN.color * _Color * _RendererColor;
+
+                real4 SHCoefficients[7];
+                SHCoefficients[0] = unity_SHAr;
+                SHCoefficients[1] = unity_SHAg;
+                SHCoefficients[2] = unity_SHAb;
+                SHCoefficients[3] = unity_SHBr;
+                SHCoefficients[4] = unity_SHBg;
+                SHCoefficients[5] = unity_SHBb;
+                SHCoefficients[6] = unity_SHC;
+
+                float3 normlWS = TransformObjectToWorld(IN.normal);
+
+                OUT.color = float4(max(half3(0, 0, 0), SampleSH9(SHCoefficients, normlWS)), 1.0f);
 
                 return OUT;
             }
@@ -118,18 +134,17 @@ Shader "Sprites/InstancedSprite"
             sampler2D _MainTex;
             sampler2D _AlphaTex;
 
-            fixed4 SpriteFrag(v2f IN) : SV_Target
+            half4 SpriteFrag(v2f IN) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
-                // fixed4 c = tex2D (_MainTex, IN.texcoord);
-                // c.rgb *= c.a;
-
                 // Now we sample texture from Texture2DArray
-                fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_Textures, float3(IN.texcoord, UNITY_ACCESS_INSTANCED_PROP(Props, _TextureIndex)));
+                half4 c = _Textures.Sample(sampler_Textures, float3(IN.texcoord, UNITY_ACCESS_INSTANCED_PROP(Props, _TextureIndex)));
+                c = c * float4(IN.color.xyz, 1.0);
                 return c;
             }
 
-        ENDCG
+            ENDHLSL
+//        ENDCG
         }
     }
 }

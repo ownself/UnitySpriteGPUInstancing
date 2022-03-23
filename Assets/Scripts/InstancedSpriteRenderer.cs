@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class InstancedSpriteRenderer : MonoBehaviour
@@ -16,7 +17,7 @@ public class InstancedSpriteRenderer : MonoBehaviour
     private MaterialPropertyBlock props;
     int textureID = 0;
 
-    private void Awake()
+    private void Start()
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 
@@ -65,6 +66,7 @@ public class InstancedSpriteRenderer : MonoBehaviour
         meshRenderer.sharedMaterial = mat;
         // meshRenderer.sharedMaterial = spriteRenderer.sharedMaterial;
         // meshRenderer.material.SetTexture("_MainTex", spriteRenderer.sprite.texture);
+
         meshRenderer.sharedMaterial.SetTexture("_Textures", spriteTextures);
 
         meshFilter.sharedMesh = quadMesh;
@@ -83,8 +85,20 @@ public class InstancedSpriteRenderer : MonoBehaviour
         newUV.z = sprite.uv[2].x;
         newUV.w = sprite.uv[2].y;
 
+        var positions = new Vector3[1];
+        positions[0] = transform.position;
+        var lightProbes = new UnityEngine.Rendering.SphericalHarmonicsL2[1];
+        var occlusionProbes = new Vector4[1];
+        LightProbes.CalculateInterpolatedLightAndOcclusionProbes(positions, lightProbes, occlusionProbes);
+        // lightProbes[0][0, 0] = positions[0].x;
+
         // Set MaterialPropertyBlock
         // meshRenderer.GetPropertyBlock(props);
+        props.CopySHCoefficientArraysFrom(lightProbes);
+        props.CopyProbeOcclusionArrayFrom(occlusionProbes);
+        meshRenderer.lightProbeUsage = LightProbeUsage.CustomProvided;
+        meshRenderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
+        // meshRenderer.lightProbeUsage = LightProbeUsage.BlendProbes;
         props.SetFloat("_TextureIndex", textureID);
         props.SetVector("_Pivot", pivot);
         props.SetVector("_NewUV", newUV);
