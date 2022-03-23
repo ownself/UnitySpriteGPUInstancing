@@ -272,6 +272,7 @@ MonoBehaviour:
   quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   pivot: {x: 0, y: 0, z: 0, w: 0}
   newUV: {x: 0, y: 0, z: 0, w: 0}
+  isLightProbeEnabled: 1
 --- !u!1 &76371528
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,6 +372,7 @@ MonoBehaviour:
   quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   pivot: {x: 0, y: 0, z: 0, w: 0}
   newUV: {x: 0, y: 0, z: 0, w: 0}
+  isLightProbeEnabled: 1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -564,6 +566,7 @@ MonoBehaviour:
   quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   pivot: {x: 0, y: 0, z: 0, w: 0}
   newUV: {x: 0, y: 0, z: 0, w: 0}
+  isLightProbeEnabled: 1
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -841,6 +844,7 @@ MonoBehaviour:
   quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   pivot: {x: 0, y: 0, z: 0, w: 0}
   newUV: {x: 0, y: 0, z: 0, w: 0}
+  isLightProbeEnabled: 1
 --- !u!1 &1702389427
 GameObject:
   m_ObjectHideFlags: 0
@@ -1071,6 +1075,7 @@ MonoBehaviour:
   quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   pivot: {x: 0, y: 0, z: 0, w: 0}
   newUV: {x: 0, y: 0, z: 0, w: 0}
+  isLightProbeEnabled: 1
 --- !u!1 &1954747320
 GameObject:
   m_ObjectHideFlags: 0
@@ -1170,6 +1175,7 @@ MonoBehaviour:
   quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   pivot: {x: 0, y: 0, z: 0, w: 0}
   newUV: {x: 0, y: 0, z: 0, w: 0}
+  isLightProbeEnabled: 1
 --- !u!1 &2024758920
 GameObject:
   m_ObjectHideFlags: 0
@@ -1269,6 +1275,7 @@ MonoBehaviour:
   quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   pivot: {x: 0, y: 0, z: 0, w: 0}
   newUV: {x: 0, y: 0, z: 0, w: 0}
+  isLightProbeEnabled: 1
 --- !u!1 &2120866602
 GameObject:
   m_ObjectHideFlags: 0
@@ -1368,3 +1375,4 @@ MonoBehaviour:
   quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   pivot: {x: 0, y: 0, z: 0, w: 0}
   newUV: {x: 0, y: 0, z: 0, w: 0}
+  isLightProbeEnabled: 1

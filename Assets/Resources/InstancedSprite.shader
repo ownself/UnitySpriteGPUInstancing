@@ -34,6 +34,7 @@ Shader "Sprites/InstancedSprite"
             #pragma fragment SpriteFrag
             #pragma require 2darray
             #pragma multi_compile_instancing
+            #pragma shader_feature USE_LIGHT_PROBE
 
             #include "LitInput.hlsl"
             #include "LitForwardPass.hlsl"
@@ -139,7 +140,9 @@ Shader "Sprites/InstancedSprite"
                 UNITY_SETUP_INSTANCE_ID(IN);
                 // Now we sample texture from Texture2DArray
                 half4 c = _Textures.Sample(sampler_Textures, float3(IN.texcoord, UNITY_ACCESS_INSTANCED_PROP(Props, _TextureIndex)));
+#if USE_LIGHT_PROBE
                 c = c * float4(IN.color.xyz, 1.0);
+#endif
                 return c;
             }
 

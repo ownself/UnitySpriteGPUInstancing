@@ -9,6 +9,7 @@ public class InstancedSpriteRenderer : MonoBehaviour
 
     public Vector4 pivot;
     public Vector4 newUV;
+    public bool isLightProbeEnabled;
 
     private static Dictionary<Texture2D, int> textureIndexes = new Dictionary<Texture2D, int>();
     private static Texture2DArray spriteTextures;
@@ -61,7 +62,7 @@ public class InstancedSpriteRenderer : MonoBehaviour
         MeshFilter meshFilter = temp.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = temp.AddComponent<MeshRenderer>();
         meshRenderer.enabled = true;
-        Material mat = Resources.Load("InstancedSprite", typeof(Material)) as Material;
+        Material mat = Resources.Load(isLightProbeEnabled ? "InstancedSpriteLightProbe" : "InstancedSprite", typeof(Material)) as Material;
         // spriteRenderer.sharedMaterial = mat;
         meshRenderer.sharedMaterial = mat;
         // meshRenderer.sharedMaterial = spriteRenderer.sharedMaterial;
