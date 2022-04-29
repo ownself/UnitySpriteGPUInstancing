@@ -12,4 +12,4 @@ Unity Version : 2019.4
 * Use MaterialPropertyBlock for GPU Instancing feature of Unity
 
 ### Related Blog:
-For more information, please check out my Chinese blog post: ![Unity Sprite GPU Instancing](http://www.ownself.org/blog/2022/unity-sprite-gpu-instancing.html)
+For more information, please check out my Chinese blog post: [Unity Sprite GPU Instancing](http://www.ownself.org/blog/2022/unity-sprite-gpu-instancing.html)
